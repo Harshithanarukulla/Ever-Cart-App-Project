@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata: 
+  name: Ever-cart-app
+spec:
+  replicas: 2
+  selector:
+    matchlabels:
+      app: ever-cart
+  template:
+    metadata:
+      labels:
+        app: ever-cart
+    spec: 
+      containers: 
+      - name: ever-cart-harshi
+        image: harshii0520/ever-cart
+        ports:
+        - containerPort: 3000
+        env:
+        - name: MONGODB_URI
+          value: "mongodb://mongodb-service:27017/even-cart"
+        - name: PORT
+          value: "3000"
+        - name: HOST
+          value: "0.0.0.0" 
+        - name: NODE_ENV
+          value: "production"
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: ever-cart
+spec: 
+  selector:
+    app: ever-cart-harshi
+  ports:
+  - port: 80
+    targetport: 3000
+  type: LoadBalancer
+    
+
+
